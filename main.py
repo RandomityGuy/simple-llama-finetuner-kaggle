@@ -113,11 +113,11 @@ def generate_text(
 
 def tokenize_and_train(
     training_text,
-    max_seq_length=512,
     micro_batch_size=1,
     gradient_accumulation_steps=1,
-    epochs=1,
     learning_rate=3e-4,
+    max_seq_length=512,
+    epochs=1,
     lora_r=8,
     lora_alpha=16,
     lora_dropout=0.01,
@@ -218,7 +218,7 @@ def tokenize_and_train(
         # The maximum number of checkpoints to keep. When this limit is reached, 
         # the oldest checkpoint will be deleted to save a new one. In this case, 
         # a maximum of 3 checkpoints will be kept.
-        save_total_limit=3,  
+        save_total_limit=1,  
     )
 
 
@@ -272,4 +272,16 @@ if __name__ == '__main__':
     for msg in trainmsgs["messages"]:
         prepared_msgs.append(msg)
 
-    tokenize_and_train(prepared_msgs)
+    mbs = 1
+    if len(sys.argv) > 2:
+        mbs = int(sys.argv[2])
+
+    gas = 1
+    if len(sys.argv) > 3:
+        gas = int(sys.argv[3])
+
+    lr = 3e-4
+    if len(sys.argv) > 4:
+        lr = float(sys.argv[4])
+
+    tokenize_and_train(prepared_msgs, mbs, gas, lr)
