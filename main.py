@@ -116,6 +116,7 @@ def tokenize_and_train(
     micro_batch_size=1,
     gradient_accumulation_steps=1,
     learning_rate=3e-4,
+    max_samples = 2000,
     max_seq_length=512,
     epochs=1,
     lora_r=8,
@@ -193,7 +194,7 @@ def tokenize_and_train(
 
         # The total number of training steps. The training process will end once this 
         # number is reached, even if not all the training epochs are completed.
-        # max_steps=1500, 
+        max_steps=max_samples, 
 
         # The total number of epochs (complete passes through the training data) 
         # to perform during the training process.
@@ -284,4 +285,8 @@ if __name__ == '__main__':
     if len(sys.argv) > 4:
         lr = float(sys.argv[4])
 
-    tokenize_and_train(prepared_msgs, mbs, gas, lr)
+    ms = 2000
+    if len(sys.argv) > 5:
+        ms = int(sys.argv[5])
+
+    tokenize_and_train(prepared_msgs, mbs, gas, lr, ms)
